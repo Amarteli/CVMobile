@@ -1,32 +1,42 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators  } from '@angular/forms';
+
 import { NavController } from '@ionic/angular';
+import * as firebase from 'firebase';
+import 'firebase/auth';
+import { ToastService } from '../services/toast.service';
 /* Ari Martelius, 1800582
  Here is checked login info*/
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  form: FormGroup;
-  registerCredentials = { email: '', password: '' };
-  private todo: FormGroup;
+  email;
+  password;
 
-  constructor(private formBuilder: FormBuilder, public navCtrl: NavController) {}
+  constructor( public navCtrl: NavController , private toastService: ToastService) {}
   ngOnInit() {
-    this.form = this.formBuilder.group({
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, Validators.required],
-    });
-  }
-  /* Form data is checked here */
-  // tslint:disable-next-line:ban-types
-  login(email: String, password: String) {
-     if (this.form.value.email === 'ari' && this.form.value.password === 'pwd') {
 
-     this.navCtrl.navigateRoot('/tabs');
-
-   }
   }
-}
+  goToRegisterPage() {
+    this.navCtrl.navigateForward('/tabs/register');
+  }
+
+  /* Login check from firebase */
+  onLogin(email, password) {
+    let errormsg = null;
+    firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(data => {
+      this.navCtrl.navigateRoot('/tabs');
+    })
+    .catch(function(error) {
+    const  errorCode = error.code;
+
+    errormsg = error.message;
+    this.toastService.present(errormsg);
+  });
+}}
