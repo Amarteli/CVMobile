@@ -31,6 +31,16 @@ const routes: Routes = [
             ]
         },
         {
+          path: 'register',
+          children:
+            [
+              {
+                path: '',
+                loadChildren: '../register/register.module#RegisterPageModule'
+              }
+            ]
+        },
+        {
           path: 'extracurr',
           children:
             [
@@ -46,7 +56,7 @@ const routes: Routes = [
               [
                 {
                   path: '',
-                  loadChildren: '../about/about.module#AboutPageModule'
+                  loadChildren: 'src/app/about/about.module#AboutPageModule'
                 }
               ]
           },
